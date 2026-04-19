@@ -2,12 +2,12 @@ import type { User } from '../types';
 
 export function buildUserContextMessage(user: User): string {
   return [
-    'Contexto do usuário:',
-    `Nome: ${user.name}`,
+    'User context:',
+    `Name: ${user.name}`,
     `Email: ${user.email}`,
-    `Perfil: ${user.role}`,
-    `Objetivo: ${user.goal}`,
-    'Considere esse contexto nas próximas respostas. Responda apenas com uma breve confirmação.',
+    `Role: ${user.role}`,
+    `Goal: ${user.goal}`,
+    'Keep this context in mind for the upcoming answers. Reply only with a brief acknowledgement.',
   ].join('\n');
 }
 

@@ -70,8 +70,8 @@ export function useChat({ user, threadId }: UseChatArgs) {
         }
         setError(
           err instanceof Error
-            ? `Não foi possível carregar a sessão: ${err.message}`
-            : 'Não foi possível carregar a sessão.',
+            ? `Could not load session: ${err.message}`
+            : 'Could not load session.',
         );
       } finally {
         setLoadingSession(false);
@@ -157,8 +157,8 @@ export function useChat({ user, threadId }: UseChatArgs) {
         const message =
           err instanceof Error
             ? err.message
-            : 'Erro desconhecido ao enviar mensagem.';
-        setError(`Falha ao enviar mensagem: ${message}`);
+            : 'Unknown error while sending the message.';
+        setError(`Failed to send message: ${message}`);
         setMessages((prev) =>
           prev
             .filter((m) => m.id !== assistantId)

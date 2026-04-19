@@ -21,7 +21,7 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new ApiError(
-      text || `Requisição falhou (${res.status} ${res.statusText})`,
+      text || `Request failed (${res.status} ${res.statusText})`,
       res.status,
     );
   }
@@ -48,8 +48,8 @@ export function getGraphImageUrl(): string {
 }
 
 /**
- * Faz POST em /chat e consome o SSE via fetch + ReadableStream.
- * Não usa EventSource porque o endpoint é POST.
+ * POST /chat and consume the SSE stream via fetch + ReadableStream.
+ * EventSource is not used because the endpoint is POST.
  */
 export async function streamChat(options: StreamChatOptions): Promise<void> {
   const { message, threadId, onStatus, onToken, signal } = options;
@@ -67,7 +67,7 @@ export async function streamChat(options: StreamChatOptions): Promise<void> {
   if (!res.ok || !res.body) {
     const text = await res.text().catch(() => '');
     throw new ApiError(
-      text || `Falha ao iniciar stream (${res.status} ${res.statusText})`,
+      text || `Failed to start stream (${res.status} ${res.statusText})`,
       res.status,
     );
   }

@@ -14,30 +14,30 @@ const FIELDS: {
 }[] = [
   {
     key: 'name',
-    label: 'Nome',
+    label: 'Name',
     type: 'text',
-    placeholder: 'Como devemos te chamar?',
+    placeholder: 'What should we call you?',
     autoComplete: 'name',
   },
   {
     key: 'email',
     label: 'Email',
     type: 'email',
-    placeholder: 'voce@empresa.com',
+    placeholder: 'you@company.com',
     autoComplete: 'email',
   },
   {
     key: 'role',
-    label: 'Cargo ou perfil',
+    label: 'Role or profile',
     type: 'text',
-    placeholder: 'Ex: Engenheiro de dados',
+    placeholder: 'e.g. Data Engineer',
     autoComplete: 'organization-title',
   },
   {
     key: 'goal',
-    label: 'Objetivo de uso',
+    label: 'Goal',
     type: 'text',
-    placeholder: 'O que você quer resolver hoje?',
+    placeholder: 'What do you want to solve today?',
   },
 ];
 
@@ -98,10 +98,10 @@ export function LoginPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-white">
-            Agente Conversacional
+            Conversational Agent
           </h1>
           <p className="mt-1 text-sm text-white/50">
-            Conte um pouco sobre você para personalizarmos a conversa.
+            Tell us a bit about yourself so we can tailor the conversation.
           </p>
         </div>
 
@@ -137,11 +137,11 @@ export function LoginPage() {
             disabled={disabled}
             className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
-            {submitting ? 'Entrando...' : 'Entrar'}
+            {submitting ? 'Signing in...' : 'Sign in'}
           </button>
 
           <p className="mt-4 text-center text-[11px] text-white/40">
-            Seus dados ficam salvos apenas no seu navegador.
+            Your data stays only in this browser.
           </p>
         </form>
       </div>

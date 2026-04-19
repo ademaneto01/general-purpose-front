@@ -21,7 +21,7 @@ export function MessageBubble({ message }: Props) {
     return (
       <div className="flex justify-center">
         <div className="max-w-[90%] rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-200">
-          <span className="font-semibold">Erro: </span>
+          <span className="font-semibold">Error: </span>
           {message.content}
         </div>
       </div>

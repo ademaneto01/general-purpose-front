@@ -28,7 +28,7 @@ export function ChatMessages({ messages, status, streaming, loadingSession }: Pr
           <div className="flex flex-1 items-center justify-center py-12">
             <div className="flex items-center gap-3 text-white/50">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-              <span className="text-sm">Carregando conversa...</span>
+              <span className="text-sm">Loading conversation...</span>
             </div>
           </div>
         ) : visible.length === 0 ? (
@@ -60,10 +60,10 @@ function EmptyState() {
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
       </div>
-      <h2 className="text-lg font-semibold text-white">Inicie a conversa</h2>
+      <h2 className="text-lg font-semibold text-white">Start the conversation</h2>
       <p className="max-w-sm text-sm text-white/50">
-        Envie uma mensagem para começar. O contexto do seu perfil será compartilhado
-        automaticamente na primeira interação.
+        Send a message to get started. Your profile context will be shared
+        automatically on the first interaction.
       </p>
     </div>
   );

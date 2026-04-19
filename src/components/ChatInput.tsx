@@ -55,7 +55,7 @@ export function ChatInput({ onSend, disabled, streaming, onCancel }: Props) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Escreva sua mensagem..."
+            placeholder="Write your message..."
             rows={1}
             disabled={disabled && !streaming}
             className="max-h-[200px] flex-1 resize-none bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none sm:text-[15px]"
@@ -66,8 +66,8 @@ export function ChatInput({ onSend, disabled, streaming, onCancel }: Props) {
               type="button"
               onClick={onCancel}
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
-              aria-label="Cancelar"
-              title="Cancelar"
+              aria-label="Cancel"
+              title="Cancel"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -83,8 +83,8 @@ export function ChatInput({ onSend, disabled, streaming, onCancel }: Props) {
               type="submit"
               disabled={disabled || value.trim().length === 0}
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white shadow-md shadow-violet-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
-              aria-label="Enviar"
-              title="Enviar"
+              aria-label="Send"
+              title="Send"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -104,7 +104,7 @@ export function ChatInput({ onSend, disabled, streaming, onCancel }: Props) {
         </div>
 
         <p className="mt-2 text-center text-[11px] text-white/30">
-          Enter para enviar · Shift + Enter para quebrar linha
+          Enter to send · Shift + Enter for a new line
         </p>
       </form>
     </div>

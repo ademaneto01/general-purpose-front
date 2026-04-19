@@ -67,7 +67,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 export function useUser(): UserContextValue {
   const ctx = useContext(UserContext);
   if (!ctx) {
-    throw new Error('useUser deve ser utilizado dentro de <UserProvider>');
+    throw new Error('useUser must be used within <UserProvider>');
   }
   return ctx;
 }

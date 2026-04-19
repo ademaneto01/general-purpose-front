@@ -48,8 +48,8 @@ export function ChatHeader({ user, onNewConversation, onLogout, disabled }: Prop
               <path d="M12 5v14" />
               <path d="M5 12h14" />
             </svg>
-            <span className="hidden sm:inline">Nova conversa</span>
-            <span className="sm:hidden">Nova</span>
+            <span className="hidden sm:inline">New chat</span>
+            <span className="sm:hidden">New</span>
           </button>
 
           <button
@@ -71,7 +71,7 @@ export function ChatHeader({ user, onNewConversation, onLogout, disabled }: Prop
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            Sair
+            Sign out
           </button>
         </div>
       </div>

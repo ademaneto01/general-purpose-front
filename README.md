@@ -1,54 +1,54 @@
 # general-purpose-front
 
-Frontend em **React + TypeScript (Vite) + Tailwind CSS v4** para consumir uma API FastAPI de agente conversacional com streaming SSE.
+A **React + TypeScript (Vite) + Tailwind CSS v4** frontend that consumes a FastAPI conversational agent with SSE streaming.
 
 ## Features
 
-- Login fake (nome, email, cargo, objetivo) persistido em `localStorage`
-- Contexto global do usuário (`UserContext`) + `thread_id` único por conversa (`crypto.randomUUID()`)
-- Chat com streaming SSE consumido via `fetch` + `ReadableStream` (sem `EventSource`)
-- Injeção automática e única do contexto do usuário na primeira mensagem de cada thread
-- Carregamento de histórico existente via `GET /sessions/:threadId`
-- Mapeamento de papéis `human → user` / `ai → assistant` (demais papéis ocultos)
-- Indicador de status discreto enquanto ferramentas são executadas
-- Resposta do assistente renderizada token a token com caret piscante
-- Scroll automático inteligente (pausa quando o usuário rola para cima)
-- Botão de nova conversa, logout e tratamento amigável de erros
-- Cancelamento de streams via `AbortController`
-- Layout responsivo e tipado ponta a ponta
+- Fake login (name, email, role, goal) persisted in `localStorage`
+- Global user context (`UserContext`) + a unique `thread_id` per conversation (`crypto.randomUUID()`)
+- Chat streaming consumed via `fetch` + `ReadableStream` (no `EventSource`, since `/chat` is `POST`)
+- Automatic, one-time user-context injection on the first message of each thread
+- Existing history loaded from `GET /sessions/:threadId`
+- Role mapping `human → user` / `ai → assistant` (other roles are hidden)
+- Discreet status indicator while tools are running
+- Assistant response rendered token by token with a blinking caret
+- Smart auto-scroll (pauses when the user scrolls up)
+- "New chat" button, sign-out, and friendly error handling
+- Stream cancellation via `AbortController`
+- Responsive layout, fully typed end to end
 
-## Requisitos
+## Requirements
 
-- Node.js 18+
-- A API FastAPI rodando e acessível (por padrão `http://localhost:8000`)
+- Node.js 20+ (Tailwind CSS v4 requirement)
+- FastAPI backend running and reachable (default `http://localhost:8000`)
 
 ## Setup
 
 ```bash
 npm install
 cp .env.example .env
-# ajuste VITE_API_URL conforme necessário
+# adjust VITE_API_URL if needed
 npm run dev
 ```
 
-A aplicação sobe em `http://localhost:5173`.
+The app runs at `http://localhost:5173`.
 
-### Variáveis de ambiente
+### Environment variables
 
-| Variável       | Descrição                               | Exemplo                 |
-| -------------- | --------------------------------------- | ----------------------- |
-| `VITE_API_URL` | Base URL da API FastAPI (sem `/` final) | `http://localhost:8000` |
+| Variable       | Description                                  | Example                 |
+| -------------- | -------------------------------------------- | ----------------------- |
+| `VITE_API_URL` | Base URL of the FastAPI backend (no trailing slash) | `http://localhost:8000` |
 
 ## Scripts
 
 ```bash
 npm run dev      # Vite dev server
-npm run build    # type-check + build de produção
-npm run preview  # serve o build
-npm run lint     # type-check
+npm run build    # type-check + production build
+npm run preview  # serve the build
+npm run lint     # type-check only
 ```
 
-## Estrutura
+## Project structure
 
 ```
 src/
@@ -80,23 +80,23 @@ src/
     └── ChatPage.tsx
 ```
 
-## Fluxo de contexto do usuário
+## User context flow
 
-O backend só aceita `{ message, thread_id }`. Portanto, na primeira mensagem de um `thread_id`, o frontend envia automaticamente um bloco com o contexto do usuário:
+The backend only accepts `{ message, thread_id }`. Therefore, on the first message of a given `thread_id`, the frontend automatically sends a context block:
 
 ```
-Contexto do usuário:
-Nome: ...
+User context:
+Name: ...
 Email: ...
-Perfil: ...
-Objetivo: ...
-Considere esse contexto nas próximas respostas.
+Role: ...
+Goal: ...
+Keep this context in mind for the upcoming answers.
 ```
 
-Esse envio acontece em background (sem aparecer na UI). Um marcador em `localStorage` garante que a injeção aconteça apenas uma vez por thread. Ao abrir uma sessão já existente via `GET /sessions/:threadId`, o marcador é setado automaticamente.
+This call happens in the background (not shown in the UI). A `localStorage` marker ensures the injection happens only once per thread. When an existing session is loaded via `GET /sessions/:threadId`, the marker is set automatically.
 
-## Notas
+## Notes
 
-- Não há autenticação real. O login serve apenas para capturar dados locais.
-- Ao clicar em "Nova conversa", é gerado um novo `thread_id` e o histórico local é limpo. O contexto do usuário será reenviado na primeira mensagem.
-- O parser SSE respeita buffers parciais entre chunks e linhas `data:` multi-linhas.
+- There is no real authentication. The login only captures local metadata.
+- Clicking "New chat" generates a new `thread_id` and clears the local history. The user context is re-sent on the first message of the new thread.
+- The SSE parser supports partial chunk buffering and multi-line `data:` events.
