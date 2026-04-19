@@ -1,8 +1,36 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ApiError, getSession, streamChat } from '../services/api';
+import { ApiError, getSession, streamChat, uploadFile } from '../services/api';
 import { storage } from '../utils/storage';
 import { buildUserContextMessage } from '../utils/userContext';
-import type { BackendMessage, UIMessage, User } from '../types';
+import type { Attachment, BackendMessage, UIMessage, User } from '../types';
+
+async function uploadAllFiles(
+  threadId: string,
+  files: File[],
+  signal: AbortSignal,
+): Promise<string[]> {
+  if (!files.length) return [];
+  const paths: string[] = [];
+  for (const f of files) {
+    const res = await uploadFile(threadId, f, signal);
+    paths.push(res.file_path);
+  }
+  return paths;
+}
+
+function buildPathsBlock(paths: string[]): string {
+  if (!paths.length) return '';
+  const lines = paths.map((p) => `- ${p}`).join('\n');
+  return `\n\n[Attached files on server]\n${lines}`;
+}
+
+function toAttachments(files: File[]): Attachment[] {
+  return files.map((f) => ({
+    name: f.name,
+    size: f.size,
+    type: f.type || 'text/plain',
+  }));
+}
 
 function makeId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -93,15 +121,17 @@ export function useChat({ user, threadId }: UseChatArgs) {
   useEffect(() => () => abortActive(), [abortActive]);
 
   const send = useCallback(
-    async (text: string) => {
+    async (text: string, files: File[] = []) => {
       const trimmed = text.trim();
-      if (!trimmed || !user || !threadId || streaming) return;
+      if ((!trimmed && files.length === 0) || !user || !threadId || streaming) return;
 
       setError(null);
+      const attachments = files.length > 0 ? toAttachments(files) : undefined;
       const userMsg: UIMessage = {
         id: makeId(),
         role: 'user',
         content: trimmed,
+        attachments,
       };
       const assistantId = makeId();
       const assistantMsg: UIMessage = {
@@ -128,8 +158,18 @@ export function useChat({ user, threadId }: UseChatArgs) {
           storage.markContextSent(threadId);
         }
 
+        const uploadedPaths = await uploadAllFiles(
+          threadId,
+          files,
+          controller.signal,
+        );
+        const pathsBlock = buildPathsBlock(uploadedPaths);
+        const composed = trimmed
+          ? `${trimmed}${pathsBlock}`
+          : pathsBlock.replace(/^\n\n/, '');
+
         await streamChat({
-          message: trimmed,
+          message: composed,
           threadId,
           signal: controller.signal,
           onStatus: (s) => setStatus(s),

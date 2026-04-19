@@ -3,6 +3,7 @@ import type {
   SSEPayload,
   SessionResponse,
   StreamChatOptions,
+  UploadResponse,
 } from '../types';
 
 const rawBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
@@ -45,6 +46,27 @@ export async function getSession(
 
 export function getGraphImageUrl(): string {
   return `${API_URL}/graph-image`;
+}
+
+/**
+ * POST /upload?thread_id=... (multipart/form-data, field name: "file")
+ * Returns the absolute path where the backend stored the file.
+ */
+export async function uploadFile(
+  threadId: string,
+  file: File,
+  signal?: AbortSignal,
+): Promise<UploadResponse> {
+  const form = new FormData();
+  form.append('file', file, file.name);
+
+  const url = `${API_URL}/upload?thread_id=${encodeURIComponent(threadId)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    body: form,
+    signal,
+  });
+  return parseJsonOrThrow<UploadResponse>(res);
 }
 
 /**

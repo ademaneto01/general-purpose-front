@@ -1,4 +1,4 @@
-import type { UIMessage } from '../types';
+import type { Attachment, UIMessage } from '../types';
 
 type Props = { message: UIMessage };
 
@@ -16,6 +16,58 @@ function renderContent(content: string, streaming: boolean | undefined) {
   );
 }
 
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function AttachmentsList({
+  attachments,
+  isUser,
+}: {
+  attachments: Attachment[];
+  isUser: boolean;
+}) {
+  return (
+    <ul
+      className={[
+        'flex flex-wrap gap-1.5',
+        isUser ? 'mb-2' : 'mb-2',
+      ].join(' ')}
+    >
+      {attachments.map((a, i) => (
+        <li
+          key={`${a.name}-${a.size}-${i}`}
+          className={[
+            'inline-flex max-w-full items-center gap-1.5 rounded-md px-2 py-1 text-[11px]',
+            isUser
+              ? 'bg-white/15 text-white'
+              : 'border border-white/10 bg-white/[0.04] text-white/80',
+          ].join(' ')}
+          title={`${a.name} · ${formatSize(a.size)}`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="h-3 w-3 shrink-0 opacity-80"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <span className="max-w-[140px] truncate sm:max-w-[200px]">{a.name}</span>
+          <span className="opacity-60">{formatSize(a.size)}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function MessageBubble({ message }: Props) {
   if (message.role === 'error') {
     return (
@@ -29,6 +81,8 @@ export function MessageBubble({ message }: Props) {
   }
 
   const isUser = message.role === 'user';
+  const hasAttachments = !!message.attachments && message.attachments.length > 0;
+  const hasContent = message.content.length > 0;
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -40,7 +94,11 @@ export function MessageBubble({ message }: Props) {
             : 'bg-white/[0.04] text-white/90 border border-white/10 rounded-bl-md',
         ].join(' ')}
       >
-        {message.content.length === 0 && message.streaming ? (
+        {hasAttachments ? (
+          <AttachmentsList attachments={message.attachments!} isUser={isUser} />
+        ) : null}
+
+        {!hasContent && message.streaming ? (
           <span className="inline-flex items-center gap-1 text-white/70">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/70" />
             <span
@@ -52,9 +110,9 @@ export function MessageBubble({ message }: Props) {
               style={{ animationDelay: '240ms' }}
             />
           </span>
-        ) : (
+        ) : hasContent ? (
           renderContent(message.content, message.streaming)
-        )}
+        ) : null}
       </div>
     </div>
   );

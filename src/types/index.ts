@@ -9,12 +9,19 @@ export type BackendRole = 'human' | 'ai' | 'tool' | 'system';
 
 export type UIRole = 'user' | 'assistant' | 'error';
 
+export type Attachment = {
+  name: string;
+  size: number;
+  type: string;
+};
+
 export type UIMessage = {
   id: string;
   role: UIRole;
   content: string;
   streaming?: boolean;
   hidden?: boolean;
+  attachments?: Attachment[];
 };
 
 export type SSEStatusPayload = {
@@ -41,6 +48,10 @@ export type SessionResponse = {
 
 export type HealthResponse = {
   status: string;
+};
+
+export type UploadResponse = {
+  file_path: string;
 };
 
 export type StreamChatOptions = {
